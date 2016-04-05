@@ -10,7 +10,7 @@ object Node {
   def main(args: Array[String]): Unit = {
     val sys = ActorSystem("nodesystem")
 
-    val actor = sys.actorOf(Props[Storer], "actor1")
+    val storer = sys.actorOf(Props[Storer], "storer")
 
   }
 }
