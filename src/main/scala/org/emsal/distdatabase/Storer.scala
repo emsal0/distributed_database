@@ -17,17 +17,24 @@ class Storer extends Actor with ActorLogging {
 
   println(outputFilename)
 
+  override def preStart(): Unit = cluster.subscribe(self, classOf[MemberEvent], classOf[UnreachableMember])
+  override def postStop(): Unit = cluster.unsubscribe(self)
+
   def receive = {
     case StoreData(data) => storeData(data)
+    case DataWritten => lock()
     case MemberUp(member) => {}
     case UnreachableMember(member) => {}
     case MemberRemoved(member, previousStatus) => {}
     case _: MemberEvent => {}
   }
 
+  def lock(): Unit = {}
+
+
   def storeData(data: String): Unit = {
+    sender() ! DataWritten
     val outputFile: File = File(outputFilename)
     outputFile << data
-    sender() ! DataWritten
   }
 }

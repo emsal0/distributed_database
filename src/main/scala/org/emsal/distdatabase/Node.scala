@@ -11,6 +11,7 @@ object Node {
     val sys = ActorSystem("nodesystem")
 
     val storer = sys.actorOf(Props[Storer], "storer")
+    val storer2 = sys.actorOf(Props[Storer], "storer2")
 
   }
 }
