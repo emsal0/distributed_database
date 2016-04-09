@@ -23,13 +23,14 @@ class Storer extends Actor with ActorLogging {
 
   def locked: Receive = {
     case StoreData(data) => {}
+    case DataWritten(data) => become(unlocked)
     case GetData(id) => {}
     case _: MemberEvent => {}
   }
 
   def receive = {
     case StoreData(data) => storeData(data)
-    case DataWritten => become(locked)
+    case WritingData(path) => become(locked)
     case MemberUp(member) => {}
     case GetData(id) => retrieveData(id)
     case UnreachableMember(member) => {}
@@ -50,7 +51,7 @@ class Storer extends Actor with ActorLogging {
       (splitLine(0), splitLine(1))
     })
 
-    val entriesMap: Map[String, String] = entries.map(i => i._1 -> i._2).toMap
+    val entriesMap: Map[String, String] = entries.toMap
 
     entriesMap.get(id) match {
       case Some(data) => sender() ! FoundData(self.path, data)
@@ -58,12 +59,10 @@ class Storer extends Actor with ActorLogging {
     }
   }
 
-
-
-
   def storeData(data: String): Unit = {
-    sender() ! DataWritten
+    sender() ! WritingData(self.path)
     val outputFile: File = File(outputFilename)
     outputFile << data
+    sender() ! DataWritten(self.path)
   }
 }
