@@ -23,8 +23,8 @@ class Storer extends Actor with ActorLogging {
 
   def locked: Receive = {
     case StoreData(data) => {}
-    case DataWritten(data) => become(unlocked)
-    case GetData(id) => {}
+    case DataWritten(data) => unbecome()
+    case GetData(id) => retrieveData(id)
     case _: MemberEvent => {}
   }
 
