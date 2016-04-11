@@ -46,7 +46,7 @@ class Storer extends Actor with ActorLogging {
     val lines: List[String] = fileContents.split("\n").toList
 
     val entries: List[(String, String)] = lines.map((line: String) => {
-      val splitLine: List[String] = lines.split(",").map((x: String) => x.trim)
+      val splitLine: List[String] = line.split(",").map((x: String) => x.trim).toList
 
       (splitLine(0), splitLine(1))
     })
