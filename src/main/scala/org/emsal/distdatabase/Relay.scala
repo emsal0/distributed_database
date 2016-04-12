@@ -5,9 +5,10 @@ import akka.actor.{ActorLogging, Actor}
 /**
   * Created by em on 4/4/16.
   */
-class Retriever extends Actor with ActorLogging {
+class Relay extends Actor with ActorLogging {
+
 
   def receive = {
-    case _ =>
+    case _ => {}
   }
 }
