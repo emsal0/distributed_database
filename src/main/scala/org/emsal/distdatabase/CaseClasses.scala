@@ -12,3 +12,4 @@ case class WritingData(actorPath: ActorPath)
 case class GetData(id: String)
 case class FoundData(actorPath: ActorPath, data:String)
 case class NothingFoundHere(actorPath: ActorPath)
+case object StorerRegistration

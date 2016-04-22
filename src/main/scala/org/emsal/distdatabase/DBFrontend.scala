@@ -1,6 +1,7 @@
 package org.emsal.distdatabase
 
-import akka.actor.Actor
+import akka.actor.{Props, ActorSystem, Actor}
+import com.typesafe.config.ConfigFactory
 
 import scala.io._
 
@@ -9,22 +10,14 @@ import scala.io._
   */
 object DBFrontend {
 
-  def loop(): Unit = {
-    val cmd: String = StdIn.readLine()
-
-
-
-    loop()
-  }
-
   def main(args: Array[String]): Unit = {
+    val port = if (args.isEmpty) "0" else args(0)
+    val config = ConfigFactory.parseString(s"akka.remote.netty.tcp.port=$port").withFallback(ConfigFactory.parseString("akka.cluster.roles = [frontend]")).withFallback(ConfigFactory.load())
 
-    loop()
+    val system = ActorSystem("nodesystem")
+    val frontend = system.actorOf(Props[FrontendActor], name = "frontend")
+
+
   }
 
-  class FrontendActor extends Actor {
-    def receive = {
-      case FoundData(path, data) => println(data)
-    }
-  }
 }
